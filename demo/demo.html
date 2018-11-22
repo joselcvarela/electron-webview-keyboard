@@ -1,117 +1,55 @@
 <!doctype html>
 <html>
-    <head>
-        
-        <script>
-            var jQuery = $ = require('jquery');
-            require('../src/client.js')(window, jQuery);
-        </script>
 
-        <link href="../virtual-keyboard.css" type="text/css" rel="stylesheet"/>
-        <style type="css/text">
-        body {
+<head>
+
+  <script>
+    var jQuery = $ = require('jquery');
+    require('../src/client.js')(window, jQuery);
+  </script>
+
+  <link href="../virtual-keyboard.css" type="text/css" rel="stylesheet" />
+  <style type="css/text">
+    body {
             color: #fff;
         }
         </style>
-    </head>
-    <body>
-        <div class="test">
-            <p>Input:text test</p>
-            <input class="kb" type="text"/>
-            <select>
-                <option default value="">Default</option>
-                <option value="theme-black">Black</option>
-                <option value="theme-mac">Mac</option>
-            </select>
-            <div class="kb-container"></div>
-        </div>
-        <div class="test">
-            <p>Input:text test wide keyboard</p>
-            <input class="kb-wide" type="text" />
-            <select>
-                <option default value="">Default</option>
-                <option value="theme-black">Black</option>
-                <option value="theme-mac">Mac</option>
-            </select>
-            <div class="kb-container"></div>
-        </div>
-        <div class="test">
-            <p>Input:text test mobile keyboard</p>
-            <input class="kb-mobile" type="text" />
-            <select>
-                <option default value="">Default</option>
-                <option value="theme-black">Black</option>
-                <option value="theme-mac">Mac</option>
-            </select>
-            <div class="kb-container"></div>
-        </div>
-        <div class="test">
-            <p>Input:password test</p>
-            <input class="kb" type="password"/>
-            <select>
-                <option default value="">Default</option>
-                <option value="theme-black">Black</option>
-                <option value="theme-mac">Mac</option>
-            </select>
-            <div class="kb-container"></div>
-        </div>
-        <div class="test">
-            <p>TextArea test</p>
-            <textarea class="kb"></textarea>
-            <select>
-                <option default value="">Default</option>
-                <option value="theme-black">Black</option>
-                <option value="theme-mac">Mac</option>
-            </select>
-            <div class="kb-container"></div>
-        </div>
-        <script type="text/javascript">
-            $('.kb').keyboard({
-                individual: true,
-                show: true,
-                displayOnFocus: false,
-                autoPosition: false,
-                container: function($el) { 
-                    return $el.parent().find('.kb-container');
-                }
-            });
-            $('.kb-wide').keyboard({ 
-                individual: true,
-                layout: 'us-en:with-numpad', 
-                show: true,
-                displayOnFocus: false,
-                autoPosition: false,
-                container: function ($el) {
-                    return $el.parent().find('.kb-container');
-                }
-            });
-            $('.kb-mobile').keyboard({ 
-                individual: true,
-                layout: 'us-en:mobile-with-numpad',
-                show: true,
-                displayOnFocus: false,
-                autoPosition: false,
-                container: function ($el) {
-                    return $el.parent().find('.kb-container');
-                }
-            });
+</head>
 
-            $('.test > select').change(function() {
-                var theme = $(this).val();
-                $(this)
-                    .parent()
-                    .find('.virtual-keyboard')
-                    .removeClass(function (index, className) {
-                        return (className.match(/(^|\s)theme-\S+/g) || []).join(' ');
-                    })
+<body style="margin: 0">
+  <div class="test">
+    <webview src="https://google.com" preload='./preload.js' style="width:100vw; height: 100vh"></webview>
+    <div class="container" style="transition: all 200ms;width:100%; background: rgba(255,255,255,.8);display: flex;position: fixed;bottom:0px;transform: translateX(100%)">
+      <div class="keyboard" style="width:calc(100% - 50px)">
+      </div>
+      <div class="close" style="height:100%; width: 50px;display: flex;justify-content: center;align-items: center;">
+        X
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    const w = document.querySelector('webview')
+    const k = $('.keyboard')
+    const x = $('.close')
+    const c = $('.container')
+    let isKeyboardOpened = false
+    x.click(() => {
+      c.css('transform', 'translateX(100%)')
+    })
+    w.addEventListener('dom-ready', () => {
+    })
+    w.addEventListener('ipc-message', ({channel}) => {
+      isKeyboardOpened = true
+      c.css('transform', 'translateX(0)')
+    })
+    $('<input />').keyboard({
+      individual: true,
+      show: true,
+      displayOnFocus: false,
+      autoPosition: true,
+      container: () => k
+    });
+  </script>
+</body>
 
-                if (theme) {
-                    $(this)
-                        .parent()
-                        .find('.virtual-keyboard')
-                        .addClass(theme);
-                }
-            });
-        </script>
-    </body>
 </html>

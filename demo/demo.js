@@ -25,9 +25,9 @@ function createWindow() {
     }))
     mainWindow.webContents.setFrameRate(30)
 
-    mainWindow.show()
     mainWindow.maximize()
-    mainWindow.webContents.openDevTools()
+    mainWindow.show()
+    // mainWindow.webContents.openDevTools()
     mainWindow.on('closed', function () {
         mainWindow = null
     })
